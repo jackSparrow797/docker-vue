@@ -1,0 +1,30 @@
+version: '3'
+services:
+  php-fpm:
+    build:
+      context: php-fpm
+    volumes:
+      - D:\__JOB\front:/var/www
+    environment:
+      XDEBUG_CONFIG: "remote_host=1host.docker.internal remote_enable=1"
+      PHP_IDE_CONFIG: "serverName=Docker"
+    networks:
+      - internal
+  nginx:
+    build:
+      context: nginx
+    volumes:
+      - D:\__JOB\front:/var/www
+    ports:
+      - "80:80"
+    depends_on:
+      - php-fpm
+    networks:
+      - internal
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.220.0/28
