@@ -1,0 +1,11 @@
+.tabs {
+  list-style: none;
+  li {
+    a {color: red;display: block;}
+    &.active {
+      background: red;
+      a {color: #fff;}
+    }
+  }
+}
+
