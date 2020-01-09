@@ -53,7 +53,7 @@
                         el: '#app',
                         data: {
                             currentTab: 'main',
-                            currentUser: 1,
+                            currentUser: 0,
                             tabs: {
                                 main: 'Главная',
                                 personal: 'Личные данные',
@@ -93,20 +93,23 @@
                         },
                         methods: {
                             getUser: function (id) {
-                                this.currentUser = id;
-                                axios.get(this.url.user + id)
-                                    .then((response) => {
-                                        // handle success
-                                        this.show = true;
-                                        this.user = response.data.data;
-                                    })
-                                    .catch(function (error) {
-                                        // handle error
-                                        console.log(error);
-                                    })
-                                    .finally(function () {
-                                        // always executed
-                                    });
+                                if (this.currentUser != id) {
+                                    this.currentUser = id;
+                                    axios.get(this.url.user + id)
+                                        .then((response) => {
+                                            // handle success
+                                            this.show = true;
+                                            this.user = response.data.data;
+                                        })
+                                        .catch(function (error) {
+                                            // handle error
+                                            console.log(error);
+                                        })
+                                        .finally(function () {
+                                            // always executed
+                                        });
+                                }
+
                             },
                             setCurrentTab: function (name) {
                                 this.currentTab = name;
