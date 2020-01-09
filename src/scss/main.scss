@@ -1,11 +1,28 @@
+
+@import "variable";
+a {text-decoration: none;}
+body {margin: 0;}
+
 .tabs {
   list-style: none;
   li {
-    a {color: red;display: block;}
+    border-radius: 10px 10px 0 0;
+    border: 1px solid $gray-900;
+    border-bottom: 0;
+    background: $gray-900;
+    a {color: $white;display: block;}
     &.active {
-      background: red;
-      a {color: #fff;}
+      background: $white;
+      a {color: $gray-900; }
     }
   }
 }
+.bold {font-weight: bold;}
 
+.tab-content {
+  margin-top: -1px;
+  border: 1px solid $gray-900;
+  ul {
+    list-style: none;
+  }
+}

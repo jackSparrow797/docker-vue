@@ -17,24 +17,34 @@
             <div class="container">
                 <h1>Vue test</h1>
                 <div id="app">
-                    <a href="#" v-on:click="getUser(1)">Пользователь 1 </a>
+                    <template v-for="(value, name) in users">
+                        <a href="#" class="btn  mr-3" :class="getClassUser(value)" @click="getUser(value)">Пользователь {{ value }}</a>
+                    </template>
                     <div class="row">
                         <div v-if="show" class="col-12 mt-5">
                             <ul class="tabs row m-0 p-0">
-                                <template v-for="(value, name, index) in users">
-                                    <li class="col-auto" :class="(index == 0) ? 'active' : ''">
-                                        <a href="#">
-                                            {{ tabs[name] }} {{ index }}
+                                <template v-for="(value, name, index) in user">
+                                    <li class="col-auto" :class="getClassTab(name)">
+                                        <a href="#" class="py-3" @click="setCurrentTab(name)">
+                                            {{ tabs[name] }}
                                         </a>
                                     </li>
                                 </template>
 
                             </ul>
+                            <template v-for="(values, name, index) in user">
+                                <div class="tab-content p-3"  v-if="currentTab == name ">
+                                    <ul class="m-0 p-0">
+                                        <li v-for="(value, name) in values">
+                                            <span class="bold">{{title[name]}}: </span>
+                                            {{ value }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </template>
 
 
-                            <ul>
-                                <li v-for="(value, name) in users.main">{{title[name]}}: {{ value }}</li>
-                            </ul>
+
                         </div>
                     </div>
                 </div>
@@ -42,6 +52,8 @@
                     var app = new Vue({
                         el: '#app',
                         data: {
+                            currentTab: 'main',
+                            currentUser: 1,
                             tabs: {
                                 main: 'Главная',
                                 personal: 'Личные данные',
@@ -51,23 +63,42 @@
                                 surname: 'Фамилия',
                                 secondname: 'Отчество',
                                 post: 'Должность',
+                                phone: 'Телефон',
+                                email: 'Email',
+                                address: 'Адрес',
+                                sex: 'Пол',
+                                age: 'Возраст',
                             },
                             show: false,
                             users: [],
+                            user: [],
                             url: {
                                 user: '/ajax/user.php?user=',
-                                users: '/ajax/users.php',
+                                users: '/ajax/user.php',
                             }
+                        },
+                        created: function() {
+                            axios.get(this.url.users)
+                                .then((response) => {
+                                    // handle success
+                                    this.users = response.data;
+                                })
+                                .catch(function (error) {
+                                    // handle error
+                                    console.log(error);
+                                })
+                                .finally(function () {
+                                    // always executed
+                                });
                         },
                         methods: {
                             getUser: function (id) {
+                                this.currentUser = id;
                                 axios.get(this.url.user + id)
                                     .then((response) => {
                                         // handle success
                                         this.show = true;
-                                        this.users = response.data.data;
-                                        // console.log(response.data);
-                                        console.log(this.users);
+                                        this.user = response.data.data;
                                     })
                                     .catch(function (error) {
                                         // handle error
@@ -76,6 +107,23 @@
                                     .finally(function () {
                                         // always executed
                                     });
+                            },
+                            setCurrentTab: function (name) {
+                                this.currentTab = name;
+                            },
+                            getClassTab: function (name) {
+                                let out = '';
+                                if (this.currentTab == name) {
+                                    out = 'active';
+                                }
+                                return out;
+                            },
+                            getClassUser: function (value) {
+                                let out = 'btn-dark';
+                                if (this.currentUser == value) {
+                                    out = 'btn-outline-dark';
+                                }
+                                return out;
                             }
                         }
                     })
